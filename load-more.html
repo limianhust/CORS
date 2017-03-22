@@ -1,0 +1,74 @@
+<ul id="load">
+
+</ul>
+<div class="flex">
+    <button class="loadMore">加载更多</button>
+</div>
+<script>
+    var loadMore = document.querySelector('button.loadMore')
+    var ul = document.getElementById('load')
+    var start = 0
+    var num = 5
+    loadMore.addEventListener('click',function (e) {
+        ajax({
+            url: 'http://a.com:8080/loadMore',
+            type: 'get',
+            data: {
+                start: start,
+                num: num
+            },
+            success: function (ret) {
+                console.log(ret)
+                var div = document.createElement('div')
+                div.innerHTML = ret
+                ul.appendChild(div)
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+        start = num + start
+    })
+//封装ajax函数
+    function ajax(opts){
+        var xhr = new XMLHttpRequest()
+        var url = opts.url
+        console.log(opts.data)
+
+        if(opts.type.toLowerCase() === 'get'){
+            url = url +'?'
+            for(var key in opts.data){
+                var url =url+ key+'='+opts.data[key]+ '&'
+            }
+            url =url.substr(0,url.length-1)
+            console.log(url)
+            xhr.open('get',url, true)
+            xhr.setRequestHeader('Content-Type','text/json')
+            xhr.send(null)
+        }else if (opts.type.toLowerCase() === 'post'){
+            xhr.open('post',url, true)
+            var data =''
+            for(var key in opts.data){
+                console.log(key)
+                data =data+ key+'='+opts.data[key]+ '&'
+                console.log(data)
+            }
+            data =data.substr(0,data.length-1)
+            console.log(data)
+            xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+            xhr.send(data)
+        }
+
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState==4){
+                if (xhr.status === 200 || xhr.status === 304){
+                    opts.success(xhr.responseText)
+                } else {
+                    opts.error()
+                }
+            }
+
+        }
+    }
+</script>
