@@ -17,8 +17,8 @@ var server = http.createServer(function(request, response){
 
     if(path === '/loadMore'){
         console.log(query)
-        response.setHeader('Access-Control-Allow-Origin', '*')  // 设置响应头 Content-Type
-        response.setHeader('Access-Control-Allow-Headers', 'Content-Type')  // 设置响应头 Content-Type
+        response.setHeader('Access-Control-Allow-Origin', '*')  // 设置响应头 Access-Control-Allow-Origin,跨域，任何来源都可以请求得到数据
+        response.setHeader('Access-Control-Allow-Headers', 'Content-Type')  // 设置响应头
         response.end(getContent(query.start,query.num))
     }else if(path === '/'){  // 如果用户请求的是 / 路径
         var string = fs.readFileSync('./index.html')  // 就读取 index.html 的内容
